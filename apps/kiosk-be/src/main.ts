@@ -15,7 +15,7 @@ const initSettings = () => {
     });
 
     container.register(OrefApiAlertsSettings, {
-        useValue: new OrefApiAlertsSettings(1000, ['ברחבי הארץ', 'בית שמש'])
+        useValue: new OrefApiAlertsSettings(5000, ['ברחבי הארץ', 'בית שמש'])
     });
 };
 

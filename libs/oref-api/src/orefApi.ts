@@ -35,7 +35,7 @@ export class OrefApi {
 
     private async fetchAlerts(): Promise<void> {
         try {
-            const res = await axios.get<OrefAlert[]>(
+            const res = await axios.get<string | OrefAlert[]>(
                 'https://www.oref.org.il/warningMessages/alert/Alerts.json'
             );
 
@@ -45,7 +45,7 @@ export class OrefApi {
                 );
             }
 
-            if (!res.data?.length) {
+            if (typeof res.data === 'string' || !res.data?.length) {
                 this.logger.info('No alerts at the moment');
 
                 this._liveAlerts = [];
