@@ -1,5 +1,11 @@
-import { AkLoggerFactory, AkLoggerSettings } from '@alerts-kiosk/logger';
-import { OrefApiAlertsSettings } from '@alerts-kiosk/oref-api';
+import 'reflect-metadata';
+
+import {
+    AkLogger,
+    AkLoggerFactory,
+    AkLoggerSettings
+} from '@alerts-kiosk/logger';
+import { OrefApi, OrefApiAlertsSettings } from '@alerts-kiosk/oref-api';
 import { container } from 'tsyringe';
 import Fastify from 'fastify';
 
@@ -13,28 +19,41 @@ const initSettings = () => {
     });
 };
 
+const initApi = async (logger: AkLogger, port: number) => {
+    const fastify = Fastify({
+        loggerInstance: logger.logger
+    });
+
+    const orefApi = container.resolve(OrefApi);
+
+    fastify.get('/', async function handler() {
+        return orefApi.liveAlerts;
+    });
+
+    try {
+        logger.info(`starting to listening on port ${port} ... `);
+
+        await fastify.listen({ port });
+
+        logger.info(`Listening on port ${port}`);
+    } catch (err) {
+        fastify.log.error(err);
+        process.exit(1);
+    }
+};
+
 const main = async () => {
     initSettings();
 
     const logger = container.resolve(AkLoggerFactory).createLogger('main');
 
-    const fastify = Fastify({
-        logger: true,
-        loggerInstance: logger.logger
-    });
+    await initApi(logger, 3000);
 
-    // Declare a route
-    fastify.get('/', async function handler(request, reply) {
-        return { hello: 'world' };
-    });
+    const orefApi = container.resolve(OrefApi);
 
-    // Run the server!
-    try {
-        await fastify.listen({ port: 3000 });
-    } catch (err) {
-        fastify.log.error(err);
-        process.exit(1);
-    }
+    orefApi.init();
+
+    logger.info('Api is initialized successfully');
 };
 
 main();

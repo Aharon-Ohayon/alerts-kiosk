@@ -21,12 +21,16 @@ export class OrefApi {
         loggerFactory: AkLoggerFactory
     ) {
         this.logger = loggerFactory.createLogger(this.constructor.name);
+    }
+
+    public init(): void {
+        this.logger.info('Initializing OrefApi ... ');
 
         setInterval(async () => {
             this.logger.info('Fetching alerts ... ');
 
             await this.fetchAlerts();
-        }, settings.interval);
+        }, this.settings.interval);
     }
 
     private async fetchAlerts(): Promise<void> {
@@ -56,12 +60,8 @@ export class OrefApi {
             this.logger.info(
                 `Fetched successfully ${res.data.length} live alerts. ${this.liveAlerts.length} are relevant to the interesting zones`
             );
-
-            return;
         } catch (error: any) {
             this.logger.error(`Error trying to fetch alerts`, { error });
-
-            return;
         }
     }
 
