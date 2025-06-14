@@ -1,20 +1,5 @@
-import { singleton } from 'tsyringe';
 import pino, { Logger } from 'pino';
-
-export class AkLoggerSettings {
-  constructor(
-    public readonly minimumLevel: 'debug' | 'info' | 'warn' | 'error'
-  ) {}
-}
-
-@singleton()
-export class AkLoggerFactory {
-  constructor(private settings: AkLoggerSettings) {}
-
-  public createLogger(sender: string): AkLogger {
-    return new AkLogger(this.settings, sender);
-  }
-}
+import { AkLoggerSettings } from './akLoggerSettings';
 
 export class AkLogger {
   private readonly logger: Logger;
