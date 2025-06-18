@@ -1,6 +1,5 @@
 import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import axios from 'axios';
-import { singleton } from 'tsyringe';
 import { OrefAlert } from './oref.model';
 
 export class OrefApiAlertsSettings {
@@ -10,7 +9,6 @@ export class OrefApiAlertsSettings {
     ) {}
 }
 
-@singleton()
 export class OrefApi {
     private logger: AkLogger;
 

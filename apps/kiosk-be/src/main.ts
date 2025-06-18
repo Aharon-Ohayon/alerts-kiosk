@@ -6,7 +6,7 @@ import {
     AkLoggerSettings
 } from '@alerts-kiosk/logger';
 import { OrefApi, OrefApiAlertsSettings } from '@alerts-kiosk/oref-api';
-import { container } from 'tsyringe';
+import { container, Lifecycle } from 'tsyringe';
 import Fastify from 'fastify';
 
 const initSettings = () => {
@@ -17,6 +17,12 @@ const initSettings = () => {
     container.register(OrefApiAlertsSettings, {
         useValue: new OrefApiAlertsSettings(5000, ['ברחבי הארץ', 'בית שמש'])
     });
+
+    container.register(
+        OrefApi,
+        { useClass: OrefApi },
+        { lifecycle: Lifecycle.Singleton }
+    );
 };
 
 const initApi = async (logger: AkLogger, port: number) => {
