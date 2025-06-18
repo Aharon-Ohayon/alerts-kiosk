@@ -2,6 +2,7 @@
     "compileOnSave": false,
     "compilerOptions": {
         "emitDecoratorMetadata": true,
+        "strictNullChecks": false,
         "experimentalDecorators": true,
         "target": "es2016",
         "module": "commonjs",
