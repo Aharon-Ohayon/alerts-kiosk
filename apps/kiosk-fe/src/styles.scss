@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+.AlertCardTime {
+    color: #656565;
+    font-size: 12px;
+}
+
+html {
+    background-color: #141414;
+
+    padding: 30px 20px;
+}
+
+.ant-alert {
+    .ant-alert-icon {
+        margin-top: 10px;
+    }
+}
