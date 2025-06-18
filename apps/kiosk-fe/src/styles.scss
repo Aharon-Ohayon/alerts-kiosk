@@ -16,3 +16,16 @@ html {
         margin-top: 10px;
     }
 }
+
+.no-alerts-container {
+    display: flex;
+    justify-content: center;
+
+    img {
+        height: 400px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+}
