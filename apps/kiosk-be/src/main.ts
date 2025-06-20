@@ -5,7 +5,7 @@ import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import Fastify from 'fastify';
 
 import { initSettings } from './initSettings';
-import { Bla, OrefApiManager } from '@alerts-kiosk/oref-api';
+import { OrefApiManager } from '@alerts-kiosk/oref-api';
 
 const initApi = async (
     logger: AkLogger,
@@ -39,11 +39,7 @@ const main = async () => {
 
     logger.info('Initializing OrefApiManager ... ');
 
-    const c = container;
-
-    const bla = container.resolve(Bla);
-
-    const orefApi = c.resolve(OrefApiManager);
+    const orefApi = container.resolve(OrefApiManager);
 
     orefApi.init();
 
