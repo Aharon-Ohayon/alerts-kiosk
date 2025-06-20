@@ -1,8 +1,10 @@
+import axios from 'axios';
 import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import { OrefAlert } from './oref.model';
-import axios from 'axios';
 import { OrefApiAlertsSettings } from './orefApiSettings';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class OrefApiManager {
     private logger: AkLogger;
 

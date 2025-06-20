@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import Fastify from 'fastify';
 
-import { initSettings } from './initSetings';
+import { initSettings } from './initSettings';
 import { Bla, OrefApiManager } from '@alerts-kiosk/oref-api';
 
 const initApi = async (
