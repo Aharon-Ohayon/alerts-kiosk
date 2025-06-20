@@ -38,4 +38,5 @@ export interface OrefAlert {
     title: string;
     data: string[];
     desc: string;
+    firstDetectedAt: Date;
 }

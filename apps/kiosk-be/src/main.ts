@@ -1,36 +1,20 @@
 import 'reflect-metadata';
 
-import {
-    AkLogger,
-    AkLoggerFactory,
-    AkLoggerSettings
-} from '@alerts-kiosk/logger';
-import { OrefApi, OrefApiAlertsSettings } from '@alerts-kiosk/oref-api';
-import { container, Lifecycle } from 'tsyringe';
+import { container } from 'tsyringe';
+import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import Fastify from 'fastify';
 
-const initSettings = () => {
-    container.register(AkLoggerSettings, {
-        useValue: new AkLoggerSettings('info')
-    });
+import { initSettings } from './initSetings';
+import { Bla, OrefApiManager } from '@alerts-kiosk/oref-api';
 
-    container.register(OrefApiAlertsSettings, {
-        useValue: new OrefApiAlertsSettings(5000, ['ברחבי הארץ', 'בית שמש'])
-    });
-
-    container.register(
-        OrefApi,
-        { useClass: OrefApi },
-        { lifecycle: Lifecycle.Singleton }
-    );
-};
-
-const initApi = async (logger: AkLogger, port: number) => {
+const initApi = async (
+    logger: AkLogger,
+    orefApi: OrefApiManager,
+    port: number
+) => {
     const fastify = Fastify({
         loggerInstance: logger.logger
     });
-
-    const orefApi = container.resolve(OrefApi);
 
     fastify.get('/', async function handler() {
         return orefApi.liveAlerts;
@@ -53,11 +37,21 @@ const main = async () => {
 
     const logger = container.resolve(AkLoggerFactory).createLogger('main');
 
-    await initApi(logger, 3000);
+    logger.info('Initializing OrefApiManager ... ');
 
-    const orefApi = container.resolve(OrefApi);
+    const c = container;
+
+    const bla = container.resolve(Bla);
+
+    const orefApi = c.resolve(OrefApiManager);
 
     orefApi.init();
+
+    logger.info('OrefApiManager is initialized.');
+
+    logger.info('Initializing api ...');
+
+    await initApi(logger, orefApi, 3000);
 
     logger.info('Api is initialized successfully');
 };
