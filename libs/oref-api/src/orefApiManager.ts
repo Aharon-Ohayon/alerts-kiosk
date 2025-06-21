@@ -3,6 +3,7 @@ import { AkLogger, AkLoggerFactory } from '@alerts-kiosk/logger';
 import { OrefAlert } from './oref.model';
 import { OrefApiAlertsSettings } from './orefApiSettings';
 import { injectable } from 'tsyringe';
+import { differenceInMinutes } from 'date-fns';
 
 @injectable()
 export class OrefApiManager {
@@ -45,9 +46,11 @@ export class OrefApiManager {
             return { allAlerts: [], filteredAlerts: [] };
         }
 
-        const liveAlerts = res.data.filter(d =>
-            this.settings.interestingZones.some(z => d.data.includes(z))
-        );
+        const liveAlerts = res.data
+            .filter(d =>
+                this.settings.interestingZones.some(z => d.data.includes(z))
+            )
+            .map(a => ({ ...a, firstDetectedAt: new Date() }));
 
         return { filteredAlerts: liveAlerts, allAlerts: res.data };
     }
@@ -64,10 +67,21 @@ export class OrefApiManager {
                 )} out of ${allAlerts.length}`
             );
 
-            this._liveAlerts = filteredAlerts;
+            const existingIds = new Set(this._liveAlerts.map(a => a.id));
+
+            this._liveAlerts = [
+                ...filteredAlerts.filter(a => !existingIds.has(a.id)),
+                ...this._liveAlerts
+            ];
         } catch (error: any) {
             this.logger.error(`Error trying to fetch alerts`, { error });
         }
+
+        this._liveAlerts = this._liveAlerts.filter(
+            a =>
+                differenceInMinutes(new Date(), a.firstDetectedAt) <=
+                this.settings.liveAlertsMinutesRetention
+        );
     }
 
     public get liveAlerts(): OrefAlert[] {

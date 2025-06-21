@@ -59,10 +59,12 @@
     "nx": {},
     "dependencies": {
         "@radix-ui/react-alert-dialog": "^1.1.14",
+        "@types/lodash": "^4.17.18",
         "antd": "^5.26.1",
         "axios": "^1.10.0",
         "date-fns": "^4.1.0",
         "fastify": "^5.4.0",
+        "lodash": "^4.17.21",
         "lucide-react": "^0.515.0",
         "pino": "^9.7.0",
         "react": "18.3.1",
